@@ -11,15 +11,6 @@ function prep($string) {
     return $string;
 }
 
-# get actor by id
-function checknames($db, $id) {
-    $query = "SELECT a.first_name, a.last_name FROM actors a WHERE a.id = ?";
-    $names = get_results($db, $query, $id, null);
-    $firstname = $names['first_name'];
-    $lastname = $names['last_name'];
-    return array($firstname, $lastname);
-}
-
 # query db and return results given 0 or more parameters
 function get_results($db, $query, $var1, $var2) {
     $pdb = $db->prepare($query);
@@ -95,16 +86,4 @@ function get_wished($db, $user_name) {
     return $rows;
 }
 
-# check if film entries in search results are also in wish list
-function check_wished($wished, $row) {
-    $wished = preg_split('/,(?={)/', $wished[0][0]);
-    for ($i = 0; $i < count($wished); $i++) {
-        $wish = json_decode($wished[$i], true);
-        if ($wish['id'] == $row[2]) {
-            array_splice($wished, $i, 1);
-            return true;
-        }
-    }
-    return false;
-}
 ?>
