@@ -14,19 +14,23 @@ function prep($string) {
 # get actor by id
 function checknames($db, $id) {
     $query = "SELECT a.first_name, a.last_name FROM actors a WHERE a.id = ?";
-    $names = get_results($db, $query, $id, 0);
+    $names = get_results($db, $query, $id, null);
     $firstname = $names['first_name'];
     $lastname = $names['last_name'];
     return array($firstname, $lastname);
 }
 
-# query db and return results given 1 or more parameters
+# query db and return results given 0 or more parameters
 function get_results($db, $query, $var1, $var2) {
     $pdb = $db->prepare($query);
-    if ($var2 !== 0) {
-        $pdb->execute(array($var1, $var2));
-    } else {
+    if ($var1 == null && $var2 == null) {
+        $pdb->execute();
+    } else if ($var1 == null && $var2 != null) {
+        $pdb->execute(array($var2));
+    } else if ($var2 == null && $var1 != null) {
         $pdb->execute(array($var1));
+    } else {
+        $pdb->execute(array($var1, $var2));
     }
     $rows = $pdb->fetchAll();
     return $rows;
@@ -39,8 +43,8 @@ function get_id($db, $firstname, $lastname) {
     $acount = array();
     foreach ($actors as $actor) {
         $query = "SELECT m.year FROM movies m JOIN roles r ON r.movie_id = m.id JOIN actors a ON
-        a.id = r.actor_id WHERE a.id = ?;";
-        $acount[$actor['id']] = count(get_results($db, $query, $actor['id'], 0));
+        a.id = r.actor_id WHERE a.id = ?";
+        $acount[$actor['id']] = count(get_results($db, $query, $actor['id'], null));
     }
     $count = 0;
     $max = 0;
@@ -69,7 +73,7 @@ function init_session() {
 
 # init db object
 function make_db() {
-    $db = new PDO("mysql:dbname=imdb", "root", "zz123456",
+    $db = new PDO("mysql:dbname=imdb", "username", "password",
     array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $db;
@@ -77,9 +81,18 @@ function make_db() {
 
 # get user's wish list
 function get_wished($db, $user_name) {
-    $query = "SELECT wish_list FROM users u WHERE u.user_name = ?";
-    $wished_rows = get_results($db, $query, $user_name, 0);
-    return $wished_rows;
+    $query = "SELECT movie_id FROM wish_list w JOIN users u ON u.user_id = w.user_id WHERE u.user_name = ?";
+    $rows = get_results($db, $query, $user_name, null);
+    if ($rows) { # entries exist in wish_list
+        $query = "SELECT m.id, m.name, m.year FROM movies m WHERE m.id IN (";
+        $query .= $rows[0][0];
+        for ($i = 1; $i < count($rows); $i++) {
+            $query .= ',' . $rows[$i][0];
+        }
+        $query .= ")";
+        $rows = get_results($db, $query, null, null);
+    }
+    return $rows;
 }
 
 # check if film entries in search results are also in wish list

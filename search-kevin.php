@@ -19,19 +19,23 @@ if (isset($_GET["firstname"]) && isset($_GET["lastname"])) {
     $query = "SELECT m.name, ANY_VALUE(m.year), ANY_VALUE(m.id) FROM movies m JOIN roles r ON
         r.movie_id = m.id JOIN actors a ON a.id = r.actor_id WHERE a.id = ? || a.id = ?
         GROUP BY 1 HAVING count(*) > 1";
-    if ($id) { # results present for entered actor
-        $rows = get_results($db, $query, $bakid, $id);
-        if (count($rows) > 0) {
-            include("common_search.php");
-        }
+    $rows = 0;
+    if ($id) $rows = get_results($db, $query, $bakid, $id);
+    if (count($rows) > 0) { # results present for entered actor
+        include("common_search.php");
     } else { ?>
          <div>
          <h3>Sorry, no results for <?=$firstname . " $lastname"?> and Kevin Bacon.</h3>
         </div>
 <?php
-    }  ?>
+    } ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="mymdb.js"></script>
+<script>
+    var text = $('caption').html();
+    text += " and Kevin Bacon";
+    $('caption').html(text);
+</script>
 <?php
 }
 include("common2.php"); ?>

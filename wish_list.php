@@ -5,22 +5,19 @@ include("common_php.php");
 include("common_session.php");
 
 $db = make_db();
-$query = "SELECT wish_list FROM users u WHERE u.user_name = ?";
-$rows = get_results($db, $query, $user_name, 0);
-if ($rows[0][0] != NULL) {
-    $wished = preg_split('/,(?={)/', $rows[0][0]);
+$wished = get_wished($db, $user_name);
+if (count($wished) > 0) {
     $count = 1;
 ?>
     <a id="top" href="#"></a>
     <h1>Your Wish List</h1>
     <table>
         <tr><th>#</th><th>Title</th><th>Year</th><th>Include?</th></tr>
-        <?php foreach ($wished as $row) {
-            $row = preg_split('/,(?=\")/', $row); ?>
-            <tr id="<?=substr($row[0], 7, -1)."tr";?>">
-                <td class="count"><?=$count?></td><td><?=substr($row[1], 8, -1);?></td>
-                <td><?=substr($row[2], 8, -2);?></td>
-                <td><input type="checkbox" id="<?=substr($row[0], 7, -1);?>" class="check" checked /></td>
+        <?php foreach ($wished as $row) { ?>
+            <tr id="<?=$row[0].'tr';?>">
+                <td class="count"><?=$count?></td><td><?=$row[1]?></td>
+                <td><?=$row[2]?></td>
+                <td><input type="checkbox" id="<?=$row[0]?>" class="check" checked /></td>
             </tr>
         <?php $count++;
               } ?>
