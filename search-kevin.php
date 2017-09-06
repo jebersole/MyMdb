@@ -19,9 +19,8 @@ if (isset($_GET["firstname"]) && isset($_GET["lastname"])) {
     $query = "SELECT m.name, ANY_VALUE(m.year), ANY_VALUE(m.id) FROM movies m JOIN roles r ON
         r.movie_id = m.id JOIN actors a ON a.id = r.actor_id WHERE a.id = ? || a.id = ?
         GROUP BY 1 HAVING count(*) > 1";
-    $rows = 0;
     if ($id) $rows = get_results($db, $query, $bakid, $id);
-    if (count($rows) > 0) { # results present for entered actor
+    if ($rows) { # results present for entered actor
         include("common_search.php");
     } else { ?>
          <div>
@@ -32,9 +31,12 @@ if (isset($_GET["firstname"]) && isset($_GET["lastname"])) {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="mymdb.js"></script>
 <script>
-    var text = $('caption').html();
-    text += " and Kevin Bacon";
-    $('caption').html(text);
+    var cap = $('caption');
+    if (cap.length) {
+        var text = cap.html();
+        text += " and Kevin Bacon";
+        $('caption').html(text);
+    }
 </script>
 <?php
 }

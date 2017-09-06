@@ -29,25 +29,9 @@ function get_results($db, $query, $var1, $var2) {
 
 # find actor id
 function get_id($db, $firstname, $lastname) {
-    $query = "SELECT a.id FROM actors a WHERE a.first_name LIKE '$firstname%' && a.last_name = '$lastname'";
-    $actors = get_results($db, $query, $firstname, $lastname);
-    $acount = array();
-    foreach ($actors as $actor) {
-        $query = "SELECT m.year FROM movies m JOIN roles r ON r.movie_id = m.id JOIN actors a ON
-        a.id = r.actor_id WHERE a.id = ?";
-        $acount[$actor['id']] = count(get_results($db, $query, $actor['id'], null));
-    }
-    $count = 0;
-    $max = 0;
-    $selected = 0;
-    foreach ($acount as $key => $value) {
-        if ($value > $count) {
-            $max = $value;
-            $count = $max;
-            $selected = $key;
-        }
-    }
-    return $selected = ($selected > 0 ? $selected : 0);
+    $query = "SELECT a.id FROM actors a WHERE a.first_name = ? && a.last_name = ?";
+    $rows = get_results($db, $query, $firstname, $lastname);
+    return $rows ? $rows[0][0] : 0;
 }
 
 # check user is logged in

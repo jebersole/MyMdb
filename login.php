@@ -12,7 +12,7 @@ $db = make_db();
 if (isset($_POST["new"])) { # new account creation
     $query = "SELECT * FROM users u WHERE u.user_name = ?";
     $rows = get_results($db, $query, $user_name, 0);
-    if (count($rows) == 0) { # username
+    if (!$rows) { # username
         $query = "INSERT INTO users (user_name, password) VALUES (?, ?)";
         $pdb = $db->prepare($query);
         $pdb->execute(array($user_name, $password));
@@ -23,7 +23,7 @@ if (isset($_POST["new"])) { # new account creation
 } else { # normal login
     $query = "SELECT * FROM users u WHERE u.user_name = ? && u.password = ?";
     $rows = get_results($db, $query, $user_name, $password);
-    if (count($rows) == 0) {
+    if (!$rows) {
     	header("Location: start.php?fail=true");
     	die();
     }
