@@ -1,6 +1,6 @@
 <?php
 # update user's wish list upon checkbox toggle
-include("common_php.php");
+include($_SERVER['DOCUMENT_ROOT'].'/mymdb/common.php');
 $user_name = init_session();
 
 if (isset($_POST["id"]) && isset($_POST["checked"])) {
@@ -15,6 +15,7 @@ if (isset($_POST["id"]) && isset($_POST["checked"])) {
         $query = "INSERT INTO wish_list (movie_id, user_id) VALUES
             (?, (SELECT user_id FROM users WHERE user_name = ?))";
     }
-    get_results($db, $query, $id, $user_name);
+    $pdb = $db->prepare($query);
+    $pdb->execute(array($id, $user_name));
 }
 ?>

@@ -5,7 +5,7 @@ $(document).ready(function() {
 
     // populate checked boxes by querying user's wish list
     $.ajax({
-        url: "get_wish.php",
+        url: "/mymdb/wishlist/get_wish.php",
         cache: false
     })
     .done(function( wishes ) {
@@ -20,7 +20,7 @@ $(document).ready(function() {
         var filmID = this.id;
         var isChecked = this.checked;
         $.ajax({
-          url: "make_wish.php",
+          url: "/mymdb/wishlist/make_wish.php",
           method: "POST",
           data: { id : filmID, checked: isChecked },
         });

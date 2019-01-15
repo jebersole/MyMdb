@@ -1,6 +1,6 @@
 <?php
 # Returns user's wish list
-include("common_php.php");
+include($_SERVER['DOCUMENT_ROOT'].'/mymdb/common.php');
 $user_name = init_session();
 $db = make_db();
 $wished = get_wished($db, $user_name);

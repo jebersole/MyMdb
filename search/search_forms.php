@@ -1,6 +1,6 @@
 
                 <!-- form to search for every movie by a given actor -->
-                <form action="search-all.php" method="get">
+                <form action="/mymdb/search/search_all.php" method="get">
                     <fieldset>
                     <legend>All movies</legend>
                     <div>
@@ -12,7 +12,7 @@
                 </form>
 
                 <!-- form to search for movies where a given actor was with Kevin Bacon -->
-                <form action="search-kevin.php" method="get">
+                <form action="/mymdb/search/search_kevin.php" method="get">
                     <fieldset>
                     <legend>Movies with Kevin Bacon</legend>
                     <div>

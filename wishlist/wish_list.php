@@ -1,8 +1,8 @@
 <?php
 # Wish list page queries db for films already added. Those displayed can be removed by unchecking.
-include("common.php");
-include("common_php.php");
-include("common_session.php");
+include($_SERVER['DOCUMENT_ROOT'].'/mymdb/header.php');
+include($_SERVER['DOCUMENT_ROOT'].'/mymdb/common.php');
+include($_SERVER['DOCUMENT_ROOT'].'/mymdb/user/common_session.php');
 
 $db = make_db();
 $wished = get_wished($db, $user_name);
@@ -30,5 +30,5 @@ if (count($wished) > 0) {
 <?php
 } ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="mymdb.js"></script>
-<?php include("common2.php"); ?>
+<script src="/mymdb/js/mymdb.js"></script>
+<? include($_SERVER['DOCUMENT_ROOT'].'/mymdb/search/search_forms.php'); ?>

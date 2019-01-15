@@ -6,7 +6,7 @@ body, html {
 }
 
 #banner, #footer {
-	background-image: url("banner-background.png");
+	background-image: url("/mymdb/images/banner-background.png");
 	color: white;
 	padding: 4px;
 	padding-top: 6px;

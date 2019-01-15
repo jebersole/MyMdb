@@ -1,8 +1,8 @@
 <?php
 # verify user's credentials or create a new account
-include("common_php.php");
+include($_SERVER['DOCUMENT_ROOT'].'/mymdb/common.php');
 if (!isset($_POST["user_name"]) || !isset($_POST["password"])) {
-	header("Location: start.php?fail=true");
+	header("Location:".baseUrl()."start.php?fail=true");
 	die();
 }
 $user_name = filter_var($_POST["user_name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -17,14 +17,14 @@ if (isset($_POST["new"])) { # new account creation
         $pdb = $db->prepare($query);
         $pdb->execute(array($user_name, $password));
        } else {
-        header("Location: newacc.php?fail=true");
+        header("Location:".baseUrl()."user/newacc.php?fail=true");
     	die();
     }
 } else { # normal login
     $query = "SELECT * FROM users u WHERE u.user_name = ? && u.password = ?";
     $rows = get_results($db, $query, $user_name, $password);
     if (!$rows) {
-    	header("Location: start.php?fail=true");
+    	header("Location:".baseUrl()."start.php?fail=true");
     	die();
     }
 }
@@ -32,5 +32,5 @@ if (isset($_POST["new"])) { # new account creation
 session_start();
 $_SESSION["user_name"] = $user_name;
 session_write_close();
-header("Location: mymdb.php");
+header("Location:".baseUrl()."mymdb.php");
 ?>
